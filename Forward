@@ -53,14 +53,14 @@ void set_motor_currents(int pwm_L, int pwm_R)
   Serial.println(pwm_R);
 }
 
-void spin_and_wait(int pwm_L, int pwm_R, int duration)
+void forward_and_wait(int pwm_L, int pwm_R, int duration)
 {
-  set_motor_currents(pwm_L, -pwm_R);
+  set_motor_currents(-pwm_L, pwm_R);
   delay(duration);
 }
 
 void loop()
 {
 
-  spin_and_wait(leftServoSpeed,rightServoSpeed,UPDATE_PERIOD); // sets speed of motors to value entered above for 0.5 sec and keeps repeating
+  forward_and_wait(leftServoSpeed,rightServoSpeed,UPDATE_PERIOD); // sets speed of motors to value entered above for 0.5 sec and keeps repeating
 }
