@@ -10,7 +10,7 @@
 #define MOT_R2_PIN 10
 #define UPDATE_PERIOD 1500
 
-int leftServoSpeed = 200;
+int leftServoSpeed = 250;
 int rightServoSpeed = 200;
 
 void setup() {
