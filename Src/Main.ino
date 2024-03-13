@@ -17,7 +17,6 @@
 
 #define MOTOR_PWM_DECREMENT_VALUE 20
 
-#define VARIABLE_SPEED_ENABLE 0
 
 // Compile-time check of initial PWM values
 #if ((MOTOR_L_PWM_INITIAL_VALUE < PWM_VALUE_MIN) || (MOTOR_L_PWM_INITIAL_VALUE > PWM_VALUE_MAX))
