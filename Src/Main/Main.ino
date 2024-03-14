@@ -7,25 +7,46 @@
 #define MOTOR_R1_PIN 9
 #define MOTOR_R2_PIN 10
 
+
+#define LDR_L_PIN A2 // Mapped to ATMega328P PCO (Pin 23) on Arduino Uno
+#define LDR_R_PIN A1 // Mapped to ATMega328P PC1 (Pin 24) on Arduino Uno
+
+#define ADC_RESOLUTION         10                    // 10-Bit ADC
+#define ADC_OUTPUT_RANGE       (1 << ADC_RESOLUTION) // (2^10 = 1024)
+#define ADC_FULL_SCALE_VOLTAGE 5.0                   // Full-Scale Voltage
+
+#define LDR_DIFF_THRESHOLD 100
+#define LDR_LOCK_THRESHOLD 800
+
+#define MOTOR_L_FORWARD_PWM_VALUE 150
+#define MOTOR_R_FORWARD_PWM_VALUE 150
+
+#define MOTOR_L_REVERSE_PWM_VALUE -150
+#define MOTOR_R_REVERSE_PWM_VALUE -150
+
+#define MOTOR_L_LEFT_TURN_PWM_VALUE 100
+#define MOTOR_R_LEFT_TURN_PWM_VALUE 200
+
+#define MOTOR_L_RIGHT_TURN_PWM_VALUE 200
+#define MOTOR_R_RIGHT_TURN_PWM_VALUE 100
+
+#define MOTOR_TURN_DURATION_MS 250
+
 #define UPDATE_PERIOD_MS 500
 
 #define PWM_VALUE_MAX 255
 #define PWM_VALUE_MIN -255
 
-#define MOTOR_L_PWM_INITIAL_VALUE 200
-#define MOTOR_R_PWM_INITIAL_VALUE 200
+// Function to measure LDR Circuit Voltage
+int MeasureLDRCircuitVoltage(int PinNumber)
+{
+  int AnalogReadResult;
+  
+  // Measure the voltage from the LDR circuit using ADC
+  AnalogReadResult = analogRead(PinNumber);
+  
+  return AnalogReadResult;
 
-#define MOTOR_PWM_DECREMENT_VALUE 20
-
-
-// Compile-time check of initial PWM values
-#if ((MOTOR_L_PWM_INITIAL_VALUE < PWM_VALUE_MIN) || (MOTOR_L_PWM_INITIAL_VALUE > PWM_VALUE_MAX))
-  #error "MOTOR_L_PWM_INITIAL_VALUE is out of range"
-#endif
-
-#if ((MOTOR_R_PWM_INITIAL_VALUE < PWM_VALUE_MIN) || (MOTOR_R_PWM_INITIAL_VALUE > PWM_VALUE_MAX))
-  #error "MOTOR_R_PWM_INITIAL_VALUE is out of range"
-#endif
 
 // Function to Set Motor Control Parameters
 void SetMotorControlParameters(int PWMValue,
@@ -82,24 +103,65 @@ void setup()
   digitalWrite(MOTOR_R2_PIN, LOW);
   
   // Output message to console
-  Serial.println("B37VB Motor Control Basics Demonstration");
+  Serial.println("B37VB Motor Control and LDR tracking Basics Demonstration");
   Serial.print("Version: ");
   Serial.println(FIRMWARE_VERSION);
 
-  #if VARIABLE_SPEED_ENABLE
-    Serial.println("Variable Motor Speed Enabled");
-  #endif
-}
 
 // Loop function runs over and over again forever
 void loop()
 {
-  static int LeftMotorPWMValue  = MOTOR_L_PWM_INITIAL_VALUE;
-  static int RightMotorPWMValue = MOTOR_R_PWM_INITIAL_VALUE;
+ int LeftLDRValue;
+  int RightLDRValue;
   
-  UpdateMotorSpeed(LeftMotorPWMValue,
-                   RightMotorPWMValue,
-                   UPDATE_PERIOD_MS);
+  unsigned int LDRDiffMagnitude;
+  
+  int LeftMotorPWMValue;
+  int RightMotorPWMValue;
+  
+  unsigned long TurnDuration;
+  
+  LeftLDRValue  = MeasureLDRCircuitVoltage(LDR_L_PIN);
+  RightLDRValue = MeasureLDRCircuitVoltage(LDR_R_PIN);
+  
+  LDRDiffMagnitude = abs(LeftLDRValue - RightLDRValue);
+  
+  if (LDRDiffMagnitude > LDR_DIFF_THRESHOLD)
+  {
+    if (LeftLDRValue > RightLDRValue)
+    {
+      LeftMotorPWMValue  = MOTOR_L_LEFT_TURN_PWM_VALUE;
+      RightMotorPWMValue = MOTOR_R_LEFT_TURN_PWM_VALUE;
+      TurnDuration       = MOTOR_TURN_DURATION_MS;
+    }
+    else
+    {
+      LeftMotorPWMValue  = MOTOR_L_RIGHT_TURN_PWM_VALUE;
+      RightMotorPWMValue = MOTOR_R_RIGHT_TURN_PWM_VALUE;
+      TurnDuration       = MOTOR_TURN_DURATION_MS;
+    }
+    
+    UpdateMotorSpeed(LeftMotorPWMValue,
+                     RightMotorPWMValue,
+                     TurnDuration);
+  }
+  else
+  {   
+    if (min(LeftLDRValue, RightLDRValue) > LDR_LOCK_THRESHOLD)
+    {
+      LeftMotorPWMValue  = 0;
+      RightMotorPWMValue = 0;
+    }
+    else
+    {  
+      LeftMotorPWMValue  = MOTOR_L_FORWARD_PWM_VALUE;
+      RightMotorPWMValue = MOTOR_R_FORWARD_PWM_VALUE;
+    }
+    
+    UpdateMotorSpeed(LeftMotorPWMValue,
+                     RightMotorPWMValue,
+                     0);
+  }
 
 
   
