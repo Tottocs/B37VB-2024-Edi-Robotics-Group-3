@@ -47,7 +47,7 @@ int MeasureLDRCircuitVoltage(int PinNumber)
   
   return AnalogReadResult;
 
-
+}
 // Function to Set Motor Control Parameters
 void SetMotorControlParameters(int PWMValue,
                                unsigned int HBridgeControlPinA,
@@ -106,7 +106,7 @@ void setup()
   Serial.println("B37VB Motor Control and LDR tracking Basics Demonstration");
   Serial.print("Version: ");
   Serial.println(FIRMWARE_VERSION);
-
+}
 
 // Loop function runs over and over again forever
 void loop()
