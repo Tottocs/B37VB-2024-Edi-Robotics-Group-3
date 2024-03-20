@@ -8,9 +8,9 @@
 #define MOT_L2_PIN 6
 #define MOT_R1_PIN 9
 #define MOT_R2_PIN 10
-#define UPDATE_PERIOD 1500
+#define UPDATE_PERIOD 500
 
-int leftServoSpeed = 200; // correct vlue 235
+int leftServoSpeed = 235; // correct vlue 235
 int rightServoSpeed = 200;
 
 void setup() {
@@ -55,7 +55,7 @@ void set_motor_currents(int pwm_L, int pwm_R)
 
 void forward_and_wait(int pwm_L, int pwm_R, int duration)
 {
-  set_motor_currents(-pwm_L, pwm_R);
+  set_motor_currents(pwm_L, pwm_R);
   delay(duration);
 }
 

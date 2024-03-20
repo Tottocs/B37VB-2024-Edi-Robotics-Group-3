@@ -1,5 +1,5 @@
 #include <stdint.h>
-#define FIRMWARE_VERSION "v1.0.1"
+#define FIRMWARE_VERSION "v1.0.2"
 
 #define UART_BAUDRATE 115200
 
@@ -20,12 +20,12 @@
 
 #define MotorDiff 1.27 // Percentage difference of power between the motors (this needs to be changed if a new robot is used) 
 
-#define LDR_DIFF_THRESHOLD 150
-#define LDR_LOCK_THRESHOLD 600 // Using 2.2k Ohms 
-#define LowThreshholdLDRValue 300
+#define LDR_DIFF_THRESHOLD 100
+#define LDR_LOCK_THRESHOLD 550 // Using 2.2k Ohms 
+#define LowThreshholdLDRValue 200 //Ambient Light (GRID=550)
 
-#define MOTOR_L_FORWARD_PWM_VALUE 150*MotorDiff
-#define MOTOR_R_FORWARD_PWM_VALUE 150
+#define MOTOR_L_FORWARD_PWM_VALUE 100*MotorDiff
+#define MOTOR_R_FORWARD_PWM_VALUE 100
 
 #define MOTOR_L_REVERSE_PWM_VALUE -150*MotorDiff
 #define MOTOR_R_REVERSE_PWM_VALUE -150
@@ -36,11 +36,11 @@
 #define MOTOR_L_RIGHT_TURN_PWM_VALUE 175*MotorDiff
 #define MOTOR_R_RIGHT_TURN_PWM_VALUE 100
 
-#define MOTOR_L_HARD_LEFT_TURN_PWM_VALUE 75*MotorDiff
+#define MOTOR_L_HARD_LEFT_TURN_PWM_VALUE -75*MotorDiff
 #define MOTOR_R_HARD_LEFT_TURN_PWM_VALUE 200
 
 #define MOTOR_L_HARD_RIGHT_TURN_PWM_VALUE 200*MotorDiff
-#define MOTOR_R_HARD_RIGHT_TURN_PWM_VALUE 75
+#define MOTOR_R_HARD_RIGHT_TURN_PWM_VALUE -75
 
 #define MOTOR_TURN_DURATION_MS 250
 
@@ -182,7 +182,7 @@ void loop()
   RightLDRDiffMagnitude = abs(RightLDRValue - HardRightLDRValue);
   //Serial.println(RightLDRDiffMagnitude);
   LeftLDRDiffMagnitude = abs(LeftLDRValue - HardLeftLDRValue);
-  Serial.println(LeftLDRDiffMagnitude);
+  //Serial.println(LeftLDRDiffMagnitude);
 
   static uint32_t PreviousTimestamp = millis();
   
@@ -218,7 +218,7 @@ void loop()
           PreviousTimestamp = CurrentTimestamp;
         }
       }
-    }
+    
     else
     {
       // Included for completeness
@@ -229,67 +229,87 @@ void loop()
   #endif
 
 
-  if (max(CentralLDRDiffMagnitude, 
-      max(LeftLDRDiffMagnitude, RightLDRDiffMagnitude)) > LDR_DIFF_THRESHOLD)
+  if ((CentralLDRDiffMagnitude > LDR_DIFF_THRESHOLD) && 
+      max(CentralLDRDiffMagnitude,
+      max(RightLDRDiffMagnitude,LeftLDRDiffMagnitude))
+      ==CentralLDRDiffMagnitude && 
+      min(LeftLDRValue,RightLDRValue)> LowThreshholdLDRValue)
+        
   {
-    if ((HardLeftLDRValue > LeftLDRValue) && 
-        (LeftLDRDiffMagnitude > CentralLDRDiffMagnitude) && 
-        (LeftLDRDiffMagnitude > RightLDRDiffMagnitude))
-    {
-      LeftMotorPWMValue  = MOTOR_L_HARD_LEFT_TURN_PWM_VALUE;
-      RightMotorPWMValue = MOTOR_R_HARD_LEFT_TURN_PWM_VALUE;
-      TurnDuration       = MOTOR_TURN_DURATION_MS;
-    }
-    else if (HardRightLDRValue > RightLDRValue && 
-            (RightLDRDiffMagnitude > CentralLDRDiffMagnitude) && 
-            (RightLDRDiffMagnitude > LeftLDRDiffMagnitude))
-    {
-      LeftMotorPWMValue  = MOTOR_L_HARD_RIGHT_TURN_PWM_VALUE;
-      RightMotorPWMValue = MOTOR_R_HARD_RIGHT_TURN_PWM_VALUE;
-      TurnDuration       = MOTOR_TURN_DURATION_MS;
-    } 
-    else if (LeftLDRValue > RightLDRValue)
+    if (LeftLDRValue > RightLDRValue)
     {
       LeftMotorPWMValue  = MOTOR_L_LEFT_TURN_PWM_VALUE;
       RightMotorPWMValue = MOTOR_R_LEFT_TURN_PWM_VALUE;
       TurnDuration       = MOTOR_TURN_DURATION_MS;
-
-    }
-    else
-      {
-        LeftMotorPWMValue  = MOTOR_L_RIGHT_TURN_PWM_VALUE;
-        RightMotorPWMValue = MOTOR_R_RIGHT_TURN_PWM_VALUE;
-        TurnDuration       = MOTOR_TURN_DURATION_MS; 
-      }
-  
+      Serial.println(5);
       
 
-
-    
-
+    }
+    if (LeftLDRValue < RightLDRValue)
+    {
+      LeftMotorPWMValue  = MOTOR_L_RIGHT_TURN_PWM_VALUE;
+      RightMotorPWMValue = MOTOR_R_RIGHT_TURN_PWM_VALUE;
+      TurnDuration       = MOTOR_TURN_DURATION_MS; 
+      Serial.println(6);
+    }
     UpdateMotorSpeed(LeftMotorPWMValue,
-                     RightMotorPWMValue,
-                     TurnDuration);
-
+                    RightMotorPWMValue,
+                    TurnDuration);  
+      
   }
+  else if (LeftLDRDiffMagnitude > LDR_DIFF_THRESHOLD && 
+          max(CentralLDRDiffMagnitude,
+          max(RightLDRDiffMagnitude,LeftLDRDiffMagnitude))
+          ==LeftLDRDiffMagnitude &&
+          HardLeftLDRValue > LeftLDRValue &&
+          min(HardLeftLDRValue,LeftLDRValue)> LowThreshholdLDRValue) 
+  { 
+    LeftMotorPWMValue  = MOTOR_L_HARD_LEFT_TURN_PWM_VALUE;
+    RightMotorPWMValue = MOTOR_R_HARD_LEFT_TURN_PWM_VALUE;
+    TurnDuration       = MOTOR_TURN_DURATION_MS;
+    Serial.println(3);          
+    UpdateMotorSpeed(LeftMotorPWMValue,
+                    RightMotorPWMValue,
+                    TurnDuration);
+  }
+  else if (RightLDRDiffMagnitude > LDR_DIFF_THRESHOLD &&
+          max(CentralLDRDiffMagnitude,
+          max(RightLDRDiffMagnitude,LeftLDRDiffMagnitude))
+          ==RightLDRDiffMagnitude &&
+          HardRightLDRValue > RightLDRValue &&
+          min(HardRightLDRValue,RightLDRValue)> LowThreshholdLDRValue)
+  {
+
+    LeftMotorPWMValue  = MOTOR_L_HARD_RIGHT_TURN_PWM_VALUE;
+    RightMotorPWMValue = MOTOR_R_HARD_RIGHT_TURN_PWM_VALUE;
+    TurnDuration       = MOTOR_TURN_DURATION_MS;
+    Serial.println(4);
+    UpdateMotorSpeed(LeftMotorPWMValue,
+                    RightMotorPWMValue,
+                    TurnDuration);   
+  }
+
   else
   {   
     if (min(LeftLDRValue, RightLDRValue) > LDR_LOCK_THRESHOLD)
     {
       LeftMotorPWMValue  = 0;
       RightMotorPWMValue = 0;
+      Serial.println(0);
     }
-    else if ((max(max(LeftLDRValue, RightLDRValue), 
-                  max(HardLeftLDRValue, HardRightLDRValue)) 
-                  < LowThreshholdLDRValue))
+    else if (max(max(LeftLDRValue, RightLDRValue), 
+              max(HardLeftLDRValue, HardRightLDRValue)) 
+              < LowThreshholdLDRValue)
     {
       LeftMotorPWMValue  = 0;
       RightMotorPWMValue = 0;
+      Serial.println(1);
     }
     else
     {  
       LeftMotorPWMValue  = MOTOR_L_FORWARD_PWM_VALUE;
       RightMotorPWMValue = MOTOR_R_FORWARD_PWM_VALUE;
+  
     }
     
     UpdateMotorSpeed(LeftMotorPWMValue,
