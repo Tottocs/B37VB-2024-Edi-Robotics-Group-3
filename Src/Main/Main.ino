@@ -1,4 +1,5 @@
 #include <stdint.h>
+
 #define FIRMWARE_VERSION "v1.0.0"
 
 #define UART_BAUDRATE 9600
@@ -7,7 +8,6 @@
 #define MOTOR_L2_PIN 6
 #define MOTOR_R1_PIN 9
 #define MOTOR_R2_PIN 10
-
 
 #define LDR_L_PIN A2 // Mapped to ATMega328P PCO (Pin 23) on Arduino Uno
 #define LDR_R_PIN A1 // Mapped to ATMega328P PC1 (Pin 24) on Arduino Uno
@@ -48,6 +48,7 @@
 #define PWM_VALUE_MAX 255
 #define PWM_VALUE_MIN -255
 
+
 #define LEADER_MODE_ENABLE 1 // Set to 1 for Leader Mode, 0 for Follower Mode
 
 #if LEADER_MODE_ENABLE
@@ -83,6 +84,7 @@ uint16_t MeasureLDRCircuitVoltage(int PinNumber)
 void SetMotorControlParameters(int16_t PWMValue,
                                uint8_t HBridgeControlPinA,
                                uint8_t HBridgeControlPinB)
+
 {
   if (PWMValue >= 0)
   {
@@ -97,9 +99,11 @@ void SetMotorControlParameters(int16_t PWMValue,
 }
 
 // Function to Update Motor Speed
+
 void UpdateMotorSpeed(int16_t  LeftMotorPWMValue,
                       int16_t  RightMotorPWMValue,
                       uint32_t DurationMilliseconds)
+
 {
   // Set Left Motor Control Parameters
   SetMotorControlParameters(LeftMotorPWMValue,
@@ -134,6 +138,7 @@ void setup()
   digitalWrite(MOTOR_R2_PIN, LOW);
   
   // Output message to console
+
   Serial.println("B37VB Motor Control and LDR tracking Basics Demonstration with conga line");
   Serial.print("Version: ");
   Serial.println(FIRMWARE_VERSION);
@@ -147,12 +152,14 @@ void setup()
                      0);
   #else
     Serial.println("Mode: Follower");
+
   #endif
 }
 
 // Loop function runs over and over again forever
 void loop()
 {
+
  int LeftLDRValue;
   int RightLDRValue;
   int HardLeftLDRValue;
@@ -278,3 +285,4 @@ void loop()
 
   
 }
+
