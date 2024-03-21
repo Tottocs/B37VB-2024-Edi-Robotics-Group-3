@@ -8,7 +8,7 @@
 #define MOT_L2_PIN 6
 #define MOT_R1_PIN 9
 #define MOT_R2_PIN 10
-#define UPDATE_PERIOD 500
+#define UPDATE_PERIOD 1500
 
 int leftServoSpeed = 235; // correct vlue 235
 int rightServoSpeed = 200;
