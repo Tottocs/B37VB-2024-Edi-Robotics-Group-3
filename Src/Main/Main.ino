@@ -1,57 +1,55 @@
 #include <stdint.h>
+#define FirmwareVersion "v1.0.4"
 
-#define FIRMWARE_VERSION "v1.0.0"
+#define UARTBaudRate 115200 // Normal 9600 but changed to 115200
 
-#define UART_BAUDRATE 9600
-
-#define MOTOR_L1_PIN 5
-#define MOTOR_L2_PIN 6
-#define MOTOR_R1_PIN 9
-#define MOTOR_R2_PIN 10
-
-#define LDR_L_PIN A2 // Mapped to ATMega328P PCO (Pin 23) on Arduino Uno
-#define LDR_R_PIN A1 // Mapped to ATMega328P PC1 (Pin 24) on Arduino Uno
-#define LDR_RR_PIN A3
-#define LDR_LL_PIN A4
-
-#define ADC_RESOLUTION         10                    // 10-Bit ADC
-#define ADC_OUTPUT_RANGE       (1 << ADC_RESOLUTION) // (2^10 = 1024)
-#define ADC_FULL_SCALE_VOLTAGE 5.0                   // Full-Scale Voltage
-
-#define MotorDiff 1.27
-
-#define LDR_DIFF_THRESHOLD 200
-#define LDR_LOCK_THRESHOLD 600
-
-#define MOTOR_L_FORWARD_PWM_VALUE 150
-#define MOTOR_R_FORWARD_PWM_VALUE 150
-
-#define MOTOR_L_REVERSE_PWM_VALUE -150
-#define MOTOR_R_REVERSE_PWM_VALUE -150
-
-#define MOTOR_L_LEFT_TURN_PWM_VALUE 100
-#define MOTOR_R_LEFT_TURN_PWM_VALUE 200
-
-#define MOTOR_L_RIGHT_TURN_PWM_VALUE 200
-#define MOTOR_R_RIGHT_TURN_PWM_VALUE 100
-
-#define MOTOR_L_HARD_LEFT_TURN_PWM_VALUE 100
-#define MOTOR_R_HARD_LEFT_TURN_PWM_VALUE 225
-
-#define MOTOR_L_HARD_RIGHT_TURN_PWM_VALUE 225
-#define MOTOR_R_HARD_RIGHT_TURN_PWM_VALUE 100
-
-#define MOTOR_TURN_DURATION_MS 250
-
-#define UPDATE_PERIOD_MS 500
-
-#define PWM_VALUE_MAX 255
-#define PWM_VALUE_MIN -255
+#define MotorL1Pin 5 // Pins on Arduino UNO that connect to motors
+#define MotorL2Pin 6
+#define MotorR1Pin 9
+#define MotorR2Pin 10
 
 
-#define LEADER_MODE_ENABLE 1 // Set to 1 for Leader Mode, 0 for Follower Mode
+#define LDRLeftPin A2 // Left LDR. Mapped to ATMega328P PCO (Pin 23) on Arduino Uno
+#define LDRRightPin A1 // Right LDR. Mapped to ATMega328P PC1 (Pin 24) on Arduino Uno
+#define LDRHardRightPin A3 // Hard Right LDR 
+#define LDRHardLeftPin A4 // Hard Left LDR
 
-#if LEADER_MODE_ENABLE
+#define ADCResolution        10                    // 10-Bit ADC
+#define ADCOutputRange       (1 << ADCResolution) // (2^10 = 1024)
+#define ADCFullScaleVoltage 5.0                   // Full-Scale Voltage
+
+#define MotorDiff 1.27 // Percentage difference of power between the motors (this needs to be changed if a new robot is used) 
+
+#define LDRDiffThreshold 150 //ADC difference between LDRs
+#define LDRLockThreshold 550 // Using 2.2k Ohms 
+#define LowThreshholdLDRValue 100 //Ambient Light (GRID=400?)
+
+#define MotorLeftForwardPWMValue 100*MotorDiff //PWM value for the left motor when driving forward
+#define MotorRightForwardPWMValue 100          //PWM value for the right motor when driving forward
+
+#define MotorLeftReversePWMValue -150*MotorDiff //PWM value for the left motor when driving in reverse
+#define MotorRightReversePWMValue -150          //PWM value for the right motor when driving in reverse
+
+#define MotorLLeftTurnPWMValue 75*MotorDiff  //PWM value for the left motor when turning left
+#define MotorRLeftTurnPWMValue 175           //PWM value for the right motor when turning left
+
+#define MotorLRightTurnPWMValue 175*MotorDiff //PWM value for the left motor when turning right
+#define MotorRRightTurnPWMValue 75            //PWM value for the right motor when turning right
+
+#define MotorLHardLeftTurnPWMValue -75*MotorDiff //PWM value for the left motor when making a hard turn left
+#define MotorRHardLeftTurnPWMValue 150           //PWM value for the right motor when making a hard turn left
+
+#define MotorLHardRightTurnPWMValue 150*MotorDiff //PWM value for the left motor when making a hard turn right
+#define MotorRHardRightTurnPWMValue -75           //PWM value for the right motor when making a hard turn left
+
+#define MotorTurnDurationMS 150 // Duration of the turn in milliseconds
+
+#define PWMValueMax 255 // Maximum PWM value allowed (Not implemented)
+#define PWMValueMin -255 // Minimum PWM value allowed (Not implemented)
+
+#define LeaderModeEnable 0 // Set to 1 for Leader Mode, 0 for Follower Mode
+
+#if LeaderModeEnable 
   typedef struct
   {
     int16_t  LeftMotorPWMValue;
@@ -61,13 +59,13 @@
   RouteLeg_t;
   
   RouteLeg_t LeaderRouteLegs[] = 
-    {{MOTOR_L_FORWARD_PWM_VALUE, MOTOR_R_FORWARD_PWM_VALUE, 5000},
+    {{MotorLeftForwardPWMValue, MotorRightForwardPWMValue, 5000},
      {0, 0, 5000},
-     {MOTOR_L_REVERSE_PWM_VALUE, MOTOR_R_REVERSE_PWM_VALUE, 5000},
+     {MotorLeftReversePWMValue, MotorRightReversePWMValue, 5000},
      {0, 0, 7500},
-     {MOTOR_L_FORWARD_PWM_VALUE, MOTOR_R_FORWARD_PWM_VALUE, 2500},
+     {MotorLeftForwardPWMValue, MotorRightForwardPWMValue, 2500},
      {0, 0, 2500},
-     {MOTOR_L_REVERSE_PWM_VALUE, MOTOR_R_REVERSE_PWM_VALUE, 2500}};
+     {MotorLeftReversePWMValue, MotorRightReversePWMValue, 2500}};
 #endif
 
 // Function to measure LDR Circuit Voltage
@@ -84,7 +82,6 @@ uint16_t MeasureLDRCircuitVoltage(int PinNumber)
 void SetMotorControlParameters(int16_t PWMValue,
                                uint8_t HBridgeControlPinA,
                                uint8_t HBridgeControlPinB)
-
 {
   if (PWMValue >= 0)
   {
@@ -99,49 +96,47 @@ void SetMotorControlParameters(int16_t PWMValue,
 }
 
 // Function to Update Motor Speed
-
 void UpdateMotorSpeed(int16_t  LeftMotorPWMValue,
                       int16_t  RightMotorPWMValue,
                       uint32_t DurationMilliseconds)
-
 {
   // Set Left Motor Control Parameters
   SetMotorControlParameters(LeftMotorPWMValue,
-                            MOTOR_L1_PIN,
-                            MOTOR_L2_PIN);
+                            MotorL1Pin,
+                            MotorL2Pin);
   
   // Set Right Motor Control Parameters
   SetMotorControlParameters(RightMotorPWMValue,
-                            MOTOR_R1_PIN,
-                            MOTOR_R2_PIN);
+                            MotorR1Pin,
+                            MotorR2Pin);
   
   // Add blocking delay (in ms)
   delay(DurationMilliseconds);
 }
 
+
 // Setup function runs once when board is powered up or reset
 void setup()
 {
   // Initialise UART
-  Serial.begin(UART_BAUDRATE);
+  Serial.begin(UARTBaudRate);
   
   // Initialise GPIO
-  pinMode(MOTOR_L1_PIN, OUTPUT);
-  pinMode(MOTOR_L2_PIN, OUTPUT);
-  pinMode(MOTOR_R1_PIN, OUTPUT);
-  pinMode(MOTOR_R2_PIN, OUTPUT);
+  pinMode(MotorL1Pin, OUTPUT);
+  pinMode(MotorL2Pin, OUTPUT);
+  pinMode(MotorR1Pin, OUTPUT);
+  pinMode(MotorR2Pin, OUTPUT);
   
   // Initialise Motor Driver
-  digitalWrite(MOTOR_L1_PIN, LOW);
-  digitalWrite(MOTOR_L2_PIN, LOW);
-  digitalWrite(MOTOR_R1_PIN, LOW);
-  digitalWrite(MOTOR_R2_PIN, LOW);
+  digitalWrite(MotorL1Pin, LOW);
+  digitalWrite(MotorL2Pin, LOW);
+  digitalWrite(MotorR1Pin, LOW);
+  digitalWrite(MotorR2Pin, LOW);
   
   // Output message to console
-
   Serial.println("B37VB Motor Control and LDR tracking Basics Demonstration with conga line");
   Serial.print("Version: ");
-  Serial.println(FIRMWARE_VERSION);
+  Serial.println(FirmwareVersion);
   
   #if LEADER_MODE_ENABLE
     Serial.println("Mode: Leader");
@@ -152,14 +147,12 @@ void setup()
                      0);
   #else
     Serial.println("Mode: Follower");
-
   #endif
 }
 
 // Loop function runs over and over again forever
 void loop()
 {
-
  int LeftLDRValue;
   int RightLDRValue;
   int HardLeftLDRValue;
@@ -173,14 +166,21 @@ void loop()
   int RightLDRDiffMagnitude;
   unsigned long TurnDuration;
   
-  LeftLDRValue  = MeasureLDRCircuitVoltage(LDR_L_PIN);
-  RightLDRValue = MeasureLDRCircuitVoltage(LDR_R_PIN);
-  HardLeftLDRValue  = MeasureLDRCircuitVoltage(LDR_LL_PIN);
-  HardRightLDRValue = MeasureLDRCircuitVoltage(LDR_RR_PIN);
+  LeftLDRValue  = MeasureLDRCircuitVoltage(LDRLeftPin);
+  //Serial.println(LeftLDRValue); // To extract value if needed for testing
+  RightLDRValue = MeasureLDRCircuitVoltage(LDRRightPin);
+  //Serial.println(RightLDRValue); // To extract value
+  HardLeftLDRValue  = MeasureLDRCircuitVoltage(LDRHardLeftPin);
+  //Serial.println(HardLeftLDRValue); // To extract value
+  HardRightLDRValue = MeasureLDRCircuitVoltage(LDRHardRightPin);
+  //Serial.println(HardRightLDRValue);
 
   CentralLDRDiffMagnitude = abs(LeftLDRValue - RightLDRValue);
+  //Serial.println(CentralLDRDiffMagnitude);
   RightLDRDiffMagnitude = abs(RightLDRValue - HardRightLDRValue);
+  //Serial.println(RightLDRDiffMagnitude);
   LeftLDRDiffMagnitude = abs(LeftLDRValue - HardLeftLDRValue);
+  //Serial.println(LeftLDRDiffMagnitude);
 
   static uint32_t PreviousTimestamp = millis();
   
@@ -195,7 +195,8 @@ void loop()
     
     if (LegIndex < TotalRouteLegs)
     {
-      if ((CurrentTimestamp - PreviousTimestamp) >= LeaderRouteLegs[LegIndex].DurationMilliseconds)
+      if ((CurrentTimestamp - PreviousTimestamp) 
+            >= LeaderRouteLegs[LegIndex].DurationMilliseconds)
       {
         if (LegIndex == (TotalRouteLegs - 1))
         {
@@ -215,7 +216,7 @@ void loop()
           PreviousTimestamp = CurrentTimestamp;
         }
       }
-    }
+    
     else
     {
       // Included for completeness
@@ -226,55 +227,92 @@ void loop()
   #endif
 
 
-  if (CentralLDRDiffMagnitude > LDR_DIFF_THRESHOLD)
+  if ((CentralLDRDiffMagnitude > LDRDiffThreshold) && 
+      max(CentralLDRDiffMagnitude,
+      max(RightLDRDiffMagnitude,LeftLDRDiffMagnitude))
+      ==CentralLDRDiffMagnitude /*&& RightLDRDiffMagnitude,LeftLDRDiffMagnitude*/ /*&& 
+      min(LeftLDRValue,RightLDRValue)> LowThreshholdLDRValue*/)
+        
   {
     if (LeftLDRValue > RightLDRValue)
     {
-      LeftMotorPWMValue  = MOTOR_L_LEFT_TURN_PWM_VALUE;
-      RightMotorPWMValue = MOTOR_R_LEFT_TURN_PWM_VALUE;
-      TurnDuration       = MOTOR_TURN_DURATION_MS;
+      LeftMotorPWMValue  = MotorLLeftTurnPWMValue;
+      RightMotorPWMValue = MotorRLeftTurnPWMValue;
+      TurnDuration       = MotorTurnDurationMS;
+      Serial.println(1);
 
     }
-    else
-      {
-        LeftMotorPWMValue  = MOTOR_L_RIGHT_TURN_PWM_VALUE;
-        RightMotorPWMValue = MOTOR_R_RIGHT_TURN_PWM_VALUE;
-        TurnDuration       = MOTOR_TURN_DURATION_MS; 
-      }
-  
-      
-    if (HardLeftLDRValue > LeftLDRValue)
+    if (LeftLDRValue < RightLDRValue)
     {
-      LeftMotorPWMValue  = MOTOR_L_HARD_LEFT_TURN_PWM_VALUE;
-      RightMotorPWMValue = MOTOR_R_HARD_LEFT_TURN_PWM_VALUE;
-      TurnDuration       = MOTOR_TURN_DURATION_MS;
+      LeftMotorPWMValue  = MotorLRightTurnPWMValue;
+      RightMotorPWMValue = MotorRRightTurnPWMValue;
+      TurnDuration       = MotorTurnDurationMS; 
+      Serial.println(2);
 
-    
-    }       
-    if (HardRightLDRValue > RightLDRValue)
-    {
-      LeftMotorPWMValue  = MOTOR_L_HARD_RIGHT_TURN_PWM_VALUE;
-      RightMotorPWMValue = MOTOR_R_HARD_RIGHT_TURN_PWM_VALUE;
-      TurnDuration       = MOTOR_TURN_DURATION_MS;
     }
-    
-
     UpdateMotorSpeed(LeftMotorPWMValue,
-                     RightMotorPWMValue,
-                     TurnDuration);
-
+                    RightMotorPWMValue,
+                    TurnDuration);  
+      
   }
+  else if (LeftLDRDiffMagnitude > LDRDiffThreshold && 
+          max(CentralLDRDiffMagnitude,
+          max(RightLDRDiffMagnitude,LeftLDRDiffMagnitude))
+          ==LeftLDRDiffMagnitude &&
+          HardLeftLDRValue > LeftLDRValue /*&&
+          min(HardLeftLDRValue,LeftLDRValue)> LowThreshholdLDRValue*/) 
+  { 
+    LeftMotorPWMValue  = MotorLHardLeftTurnPWMValue;
+    RightMotorPWMValue = MotorRHardLeftTurnPWMValue;
+    TurnDuration       = MotorTurnDurationMS;
+    Serial.println(3);
+
+       
+    UpdateMotorSpeed(LeftMotorPWMValue,
+                    RightMotorPWMValue,
+                    TurnDuration);
+  }
+  else if (RightLDRDiffMagnitude > LDRDiffThreshold &&
+          max(CentralLDRDiffMagnitude,
+          max(RightLDRDiffMagnitude,LeftLDRDiffMagnitude))
+          ==RightLDRDiffMagnitude &&
+          HardRightLDRValue > RightLDRValue /*&&
+          min(HardRightLDRValue,RightLDRValue)> LowThreshholdLDRValue*/)
+  {
+
+    LeftMotorPWMValue  = MotorLHardRightTurnPWMValue;
+    RightMotorPWMValue = MotorRHardRightTurnPWMValue;
+    TurnDuration       = MotorTurnDurationMS;
+    Serial.println(4);
+    UpdateMotorSpeed(LeftMotorPWMValue,
+                    RightMotorPWMValue,
+                    TurnDuration);   
+  }
+
   else
   {   
-    if (min(LeftLDRValue, RightLDRValue) > LDR_LOCK_THRESHOLD)
+    if (max(LeftLDRValue, RightLDRValue) > LDRLockThreshold /*||
+        max(HardLeftLDRValue,LeftLDRValue) > LDRLockThreshold ||
+        max(HardRightLDRValue,RightLDRValue) > LDRLockThreshold*/)
+        
     {
       LeftMotorPWMValue  = 0;
       RightMotorPWMValue = 0;
+      Serial.println(0);
+
     }
+    /*else if (max(max(LeftLDRValue, RightLDRValue), 
+              max(HardLeftLDRValue, HardRightLDRValue)) 
+              < LowThreshholdLDRValue)
+    {
+      LeftMotorPWMValue  = 0;
+      RightMotorPWMValue = 0;
+    }*/
     else
     {  
-      LeftMotorPWMValue  = MOTOR_L_FORWARD_PWM_VALUE;
-      RightMotorPWMValue = MOTOR_R_FORWARD_PWM_VALUE;
+      LeftMotorPWMValue  = MotorLeftForwardPWMValue;
+      RightMotorPWMValue = MotorRightForwardPWMValue;
+  
     }
     
     UpdateMotorSpeed(LeftMotorPWMValue,
@@ -282,7 +320,6 @@ void loop()
                      0);
   }
 
-
+  
   
 }
-
