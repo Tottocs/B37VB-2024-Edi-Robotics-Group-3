@@ -50,7 +50,7 @@ void set_motor_currents(int pwm_L, int pwm_R)
   Serial.print("Set motor R PWM = ");
   Serial.print(pwm_L);
   Serial.print(" motor R PWM = ");
-  Serial.println(pwm_B);
+  Serial.println(pwm_R);
 }
 
 void spin_and_wait(int pwm_L, int pwm_R, int duration)
