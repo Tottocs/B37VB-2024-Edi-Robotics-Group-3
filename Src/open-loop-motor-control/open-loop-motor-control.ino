@@ -1,68 +1,66 @@
 //C code on Arduino UNO
 
-#define FirmwareVersion "v.1.0"
+#define FIRMWARE_VERSION "v.1.0"
 
-#define BuadrateSpeed 9600 //At which speed the information is sent through the Arduino
+#define BITRATE_SPEED 9600
 
-#define MotorLeft1Pin 5 // Pins on the Arduino for that takes that sends PWM values
-#define MotorLeft2Pin 6
-#define MotorRight1Pin 9
-#define MotorRight2Pin 10
-#define UpdatePeriod 2000 // The variable speed will change every 2000 millisec
+#define MOT_L1_PIN 5 // Changed the names of the pins  R AND L for left and right
+#define MOT_L2_PIN 6
+#define MOT_R1_PIN 9
+#define MOT_R2_PIN 10
+#define UPDATE_PERIOD 1500
 
-int InitialLeftServoPWM = 100; 
-const int ConstantRightServoPWM = 200; // Three chosen constant value of either __ ,__ and __
+int leftServoSpeed = 235; // correct vlue 235
+int rightServoSpeed = 200;
 
 void setup() {
-  //initiate with the Baudrate speed
-  Serial.begin(BuadrateSpeed);
+  //initiate
+  Serial.begin(BITRATE_SPEED);
   
   //H-Bridge switches
-  pinMode(MotorLeft1Pin, OUTPUT);
-  pinMode(MotorLeft2Pin, OUTPUT);
-  pinMode(MotorRight1Pin, OUTPUT);
-  pinMode(MotorRight2Pin, OUTPUT);
+  pinMode(MOT_L1_PIN, OUTPUT);
+  pinMode(MOT_L2_PIN, OUTPUT);
+  pinMode(MOT_R1_PIN, OUTPUT);
+  pinMode(MOT_R2_PIN, OUTPUT);
 
-  digitalWrite(MotorLeft1Pin, LOW);
-  digitalWrite(MotorLeft2Pin, LOW);
-  digitalWrite(MotorRight1Pin, LOW);
-  digitalWrite(MotorRight2Pin, LOW);
+  digitalWrite(MOT_L1_PIN, LOW);
+  digitalWrite(MOT_L2_PIN, LOW);
+  digitalWrite(MOT_R1_PIN, LOW);
+  digitalWrite(MOT_R2_PIN, LOW);
 }
-//Function that sets up the different motors PWM using Left and Right servo PWM variables
-void SetMotorPWM(int PWM, int IN1_Pin, int IN2_Pin)
+
+void set_motor_pwm(int pwm, int IN1_PIN, int IN2_PIN)
 {
-  if (PWM < 0) {  // reverse speeds
-    analogWrite(IN1_Pin, -PWM);
-    digitalWrite(IN2_Pin, LOW);
+  if (pwm < 0) {  // reverse speeds
+    analogWrite(IN1_PIN, -pwm);
+    digitalWrite(IN2_PIN, LOW);
 
   } else { // stop or forward
-    digitalWrite(IN1_Pin, LOW);
-    analogWrite(IN2_Pin, PWM);
+    digitalWrite(IN1_PIN, LOW);
+    analogWrite(IN2_PIN, pwm);
   }
 }
 
-void SetMotorCurrents(int PWM_Left, int PWM_Right)
+void set_motor_currents(int pwm_L, int pwm_R)
 {
-  SetMotorPWM(PWM_Left, MotorLeft1Pin, MotorLeft2Pin);
-  SetMotorPWM(PWM_Right, MotorRight1Pin, MotorRight2Pin);
+  set_motor_pwm(pwm_L, MOT_L1_PIN, MOT_L2_PIN);
+  set_motor_pwm(pwm_R, MOT_R1_PIN, MOT_R2_PIN);
 
   // Print a status message to the console.
   Serial.print("Set motor R PWM = ");
-  Serial.print(PWM_Left);
+  Serial.print(pwm_L);
   Serial.print(" motor R PWM = ");
-  Serial.println(PWM_Right);
+  Serial.println(pwm_R);
 }
 
-void ForwardAndWait(int LeftPWM, int RightPWM, int Duration)
+void forward_and_wait(int pwm_L, int pwm_R, int duration)
 {
-  for (int LeftVariablePWM=LeftPWM;LeftVariablePWM<=255;LeftVariablePWM=+5){
-    SetMotorCurrents(LeftVariablePWM, RightPWM);
-    delay(Duration);
-  }
+  set_motor_currents(pwm_L, pwm_R);
+  delay(duration);
 }
 
 void loop()
 {
-  // sets speed of motors to value entered at the top for 2 sec and keeps repeating
-  ForwardAndWait(InitialLeftServoPWM,ConstantRightServoPWM,UpdatePeriod); 
+
+  forward_and_wait(leftServoSpeed,rightServoSpeed,UPDATE_PERIOD); // sets speed of motors to value entered above for 0.5 sec and keeps repeating
 }
