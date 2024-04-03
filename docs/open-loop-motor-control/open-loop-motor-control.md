@@ -30,14 +30,19 @@ We also managed to capture images of our PWM waves using the oscilloscope, this 
 In the images below the differences between specific PWM values can be seen.
 
 ![Both Max](Both-Max.PNG)
+
 Figure 1: Both left and right servo PWM max (255) value. 
 ![Left Low](Left-Low.PNG)
+
 Figure 2: Left PWM (125) low value.
 ![Left Mid](Left-Mid.PNG)
+
 Figure 3: Left PWM (225) mid value.
 ![Rigth Low](Right-Low.PNG)
+
 Figure 4: Right PWM (100) low value.
 ![Right Mid](Right-Mid.PNG)
+
 Figure 5: Right PWM (200) mid value.
 
 ## Conclusion
