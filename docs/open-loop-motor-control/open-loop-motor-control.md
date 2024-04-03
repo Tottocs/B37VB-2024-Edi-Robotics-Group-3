@@ -30,9 +30,13 @@ We also managed to capture images of our PWM waves using the oscilloscope, this 
 In the images below the differences between specific PWM values can be seen.
 
 ![Both Max](Both-Max.PNG)
+
 ![Left Low](Left-Low.PNG)
+
 ![Left Mid](Left-Mid.PNG)
+
 ![Rigth Low](Right-Low.PNG)
+
 ![Right Mid](Right-Mid.PNG)
 
 ## Conclusion
