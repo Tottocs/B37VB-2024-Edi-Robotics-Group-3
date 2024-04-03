@@ -19,7 +19,7 @@ small, medium and large values of the right servo. We could then drive it in a s
 of 1 metre.
 
 ## Results
-
+Table 1: Motor speed test.
 | right Servo Speed - Left Servo Speed (Pwm Value) |Time 1 (s)|Time 2 (s)|Time 3 (s) | avg Speed (m/s) |
 |--------------------------------------|------|------|--------|-----------------|
 |               100 - 125              |8.64  | 8.56 | 8.61   |      8.60       |
@@ -30,14 +30,15 @@ We also managed to capture images of our PWM waves using the oscilloscope, this 
 In the images below the differences between specific PWM values can be seen.
 
 ![Both Max](Both-Max.PNG)
-
+Figure 1: Both left and right servo PWM max (255) value. 
 ![Left Low](Left-Low.PNG)
-
+Figure 2: Left PWM (125) low value.
 ![Left Mid](Left-Mid.PNG)
-
+Figure 3: Left PWM (225) mid value.
 ![Rigth Low](Right-Low.PNG)
-
+Figure 4: Right PWM (100) low value.
 ![Right Mid](Right-Mid.PNG)
+Figure 5: Right PWM (200) mid value.
 
 ## Conclusion
 In conclusion, this motor characterisation task allowed us to gain a deeper understanding of the funcionality of the Arduino UNO board, we 
