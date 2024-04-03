@@ -15,13 +15,10 @@ this indicated that the left servo was "weaker" than the right one. In order to 
 the code to maintain the right servo at the same speed while slowly ramping the speed of the left one up after certain intervals. A 
 flashing light would indicate moments where the speed changed, using this method we could wait until our robot began driving straight
 and then recorded the value for the corresponding left speed. This process was repeated to find the corresponding left servo speeds for 
-small, medium and large values of the right servo. We could then drive it in a straight line in order to calculate its times over a distance 
-of 1 metre.
+small, medium and large values of the right servo. Table 1 displays our collected results from the motor speed test. This involved letting the robot drive for 1 meter in a straight line while 
+recording the time taken using a stopwatch.
 
 ## Results
-
-Table 1 displays our collected results from the motor speed test. This involved letting the robot drive for 1 meter in a straight line while 
-recording the time taken using a stopwatch.
 
 Table 1: Motor speed test.
 | Left Servo Speed - right Servo Speed (Pwm Value) |Time 1 (s)|Time 2 (s)|Time 3 (s) | avg Speed (m/s) |
