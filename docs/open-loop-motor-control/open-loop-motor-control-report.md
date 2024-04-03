@@ -11,12 +11,12 @@ current is given by longer widths).
 ## Method
 We used PWM signals to control our motor speeds with a max PWM value of 255 for maximum speed. 
 At first, we discovered that our servos were not running at the same speed. When both were set to the same value the robot would turn left,
-this indicated that the left servo was "weaker" than the right one. In order to find the proper speed to run the left servo at, we edited 
-the code to maintain the right servo at the same speed while slowly ramping the speed of the left one up after certain intervals. A 
-flashing light would indicate moments where the speed changed, using this method we could wait until our robot began driving straight
-and then recorded the value for the corresponding left speed. This process was repeated to find the corresponding left servo speeds for 
-small, medium and large values of the right servo. Table 1 displays our collected results from the motor speed test. This involved letting the robot drive for 1 meter in a straight line while 
-recording the time taken using a stopwatch.
+this indicated that the left servo was weaker than the right one. In order to find the proper speed to run the left servo at, we edited 
+the code to maintain the right servo at the same speed while slowly ramping the speed of the left one up after certain intervals. A flashing
+light would indicate moments where the speed changed, using this method we could wait until our robot began driving straight and then recorded
+the value for the corresponding left PWM value. This process was repeated to find the corresponding left servo PWM values for small, medium and
+large values of the right servo. Table 1 displays our collected results from the motor speed test. This involved letting the robot drive for 1 
+meter in a straight line while recording the time taken using a stopwatch. We tested each speed 3 times and averaged the values.
 
 ## Results
 
@@ -51,7 +51,9 @@ Figure 5: Right PWM (200) mid value.
 
 ## Conclusion
 In conclusion, this motor characterisation task allowed us to gain a deeper understanding of the funcionality of the Arduino UNO board, we explored
-the code required to make the robot funcion and manipulated our values to change its behaviour. Our results show a direct relationship between the
-input PWM value and the speed of the robot. When the PWM value of the robot was doubled, the speed was doubled, this suggests that the results are 
-accurate. We also managed to capture images of our PWM waves using the oscilloscope (Figures 1-5), this was quite useful for us to understand how 
-the width was modulated. This was a simple example but it gave us an idea of how to characterise components in a real world setting. 
+the code required to make the robot funcion and manipulated our values to change its behaviour. we found that the differences between the two servos
+was not linear, when both were at maximum values the robot would drive straight but on low values the correct left servo PWM value had to be calculated.
+Our results show a direct relationship between the input PWM value and the speed of the robot. When the PWM values of the robot were doubled, the speed 
+was doubled, this suggests that the results are accurate. We also managed to capture images of our PWM waves using the oscilloscope (Figures 1-5), this 
+was quite useful for us to understand how the width was modulated. This was a simple example but it gave us an idea of how to characterise components 
+in a real world setting. 
