@@ -61,9 +61,9 @@ void Set_Motor_Currents(int pwm_L, int pwm_R)
 //Drives forward and changes left servo speed every 1500 millieconds with a 100 millisecond blink
 void Forward_Lag_Check(int PWM_L, int PWM_R, int Duration, int BlinkDuration)
 {
-  for (int LeftVariablePWM=PWM_L;LeftVariablePWM<=255;LeftVariablePWM=+5)
+  for (int LeftVariablePWM=PWM_L;LeftVariablePWM<=255;LeftVariablePWM+=5)
   {
-    digitalWrite(LED_PIN, HIGH);
+    digitalWrite(LED_PIN, HIGH); // The first blink will be at the initial value
     delay(BlinkDuration);
     digitalWrite(LED_PIN, LOW);
     Set_Motor_Currents(LeftVariablePWM, PWM_R);
