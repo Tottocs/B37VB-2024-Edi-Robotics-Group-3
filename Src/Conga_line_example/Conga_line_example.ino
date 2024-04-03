@@ -8,15 +8,15 @@
 #define LOCK_INDICATOR_PIN       4 // Mapped to ATMega328P PD4 (Pin 6) on Arduino Uno
 #define MOTOR_L1_PIN             5 // Mapped to ATMega328P PD5 (Pin 11) on Arduino Uno
 #define MOTOR_L2_PIN             6 // Mapped to ATMega328P PD6 (Pin 12) on Arduino Uno
-#define TRANSMIT_ID_CONTROL_PIN  7 // Mapped to ATMega328P PD7 (Pin 13) on Arduino Uno
+#define TRANSMIT_ID_CONTROL_PIN  A0 // Mapped to ATMega328P PD7 (Pin 13) on Arduino Uno
 #define MOTOR_R1_PIN             9 // Mapped to ATMega328P PB1 (Pin 15) on Arduino Uno
 #define MOTOR_R2_PIN            10 // Mapped to ATMega328P PB2 (Pin 16) on Arduino Uno
 #define BUGGY_ID_PIN_0          16 // Mapped to ATMega328P PC2 (Pin 25) on Arduino Uno
 #define BUGGY_ID_PIN_1          17 // Mapped to ATMega328P PC3 (Pin 26) on Arduino Uno
 #define BUGGY_ID_PIN_2          18 // Mapped to ATMega328P PC4 (Pin 27) on Arduino Uno
 #define BUGGY_ID_PIN_3          19 // Mapped to ATMega328P PC5 (Pin 28) on Arduino Uno
-#define LDR_L_PIN               A0 // Mapped to ATMega328P PCO (Pin 23) on Arduino Uno
-#define LDR_R_PIN               A1 // Mapped to ATMega328P PC1 (Pin 24) on Arduino Uno
+#define LDR_L_PIN               A1 // Mapped to ATMega328P PCO (Pin 23) on Arduino Uno
+#define LDR_R_PIN               A2 // Mapped to ATMega328P PC1 (Pin 24) on Arduino Uno
 
 #define ADC_RESOLUTION         10                    // 10-Bit ADC
 #define ADC_OUTPUT_RANGE       (1 << ADC_RESOLUTION) // (2^10 = 1024 = 10000000000b)
