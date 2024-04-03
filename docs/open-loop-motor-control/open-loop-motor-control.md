@@ -34,3 +34,4 @@ In the images below the differences between specific PWM values can be seen.
 In conclusion, this motor characterisation task allowed us to gain a deeper understanding of the funcionality of the Arduino UNO board, we 
 explored the code required to make the robot funcion and manipulated our values to change its behaviour. This was a simple example but it 
 gave us an idea of how to characterise components in a real world setting. 
+
