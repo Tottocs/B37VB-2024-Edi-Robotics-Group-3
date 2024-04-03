@@ -1,5 +1,4 @@
-# Open Loop Motor Control Characterisation report
-## B37VB 2024 Group 3 (Torin & David) 
+# Open Loop Motor Control Characterisation report - ## B37VB 2024 Group 3 (Torin & David) 
 The goal of the assignment is to characterise the performance of an open-loop control system to control the two drive servos on the robot. 
 As this is an open loop system, there is no feedback to ensure that instructions are properly being followed therefore it is imperative to
 characterise the responses of both motors to changes in operating speeds.
