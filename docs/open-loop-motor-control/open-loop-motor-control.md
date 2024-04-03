@@ -8,3 +8,8 @@
 |255 - 255                                                 | 3.52                  |
 
 ![Both Max](Both-Max.PNG)
+![Left Low](Left-Low.PNG)
+![Left Mid](Left-Mid.PNG)
+![Rigth Low](Right-Low.PNG)
+![Right Mid](Right-Mid.PNG)
+
