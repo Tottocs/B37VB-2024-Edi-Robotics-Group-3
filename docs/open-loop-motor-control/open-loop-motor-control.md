@@ -1,7 +1,7 @@
 
 
 
-| right Servo Speed - Left Servo Speed |Time 1 (s)|Time 2 (s)|Time 3 (s) | avg Speed (m/s) |
+| right Servo Speed - Left Servo Speed (Pwm Value) |Time 1 (s)|Time 2 (s)|Time 3 (s) | avg Speed (m/s) |
 |--------------------------------------|------|------|--------|-----------------|
 |               100 - 125              |8.64  | 8.56 | 8.61   |      8.60       |
 |               200 - 225              |4.03  | 4.09 | 4.11   |      4.08       |
