@@ -7,4 +7,4 @@
 |200  - 225                                                | 4.03                  |
 |255 - 255                                                 | 3.52                  |
 
-![](docs/open-loop-motor-control/Both Max.PNG)
+![Both Max](docs/open-loop-motor-control/Both-Max.PNG)
