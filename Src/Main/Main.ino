@@ -20,7 +20,7 @@
 
 #define MotorDiff 1.27 // Percentage difference of power between the motors (this needs to be changed if a new robot is used) 
 
-#define LDRDiffThreshold 150 //ADC difference between LDRs
+#define LDRDiffThreshold 200 //ADC difference between LDRs
 #define LDRLockThreshold 550 // Using 2.2k Ohms 
 #define LowThreshholdLDRValue 100 //Ambient Light (GRID=400?)
 
@@ -47,9 +47,9 @@
 #define PWMValueMax 255 // Maximum PWM value allowed (Not implemented)
 #define PWMValueMin -255 // Minimum PWM value allowed (Not implemented)
 
-#define LeaderModeEnable 0 // Set to 1 for Leader Mode, 0 for Follower Mode
+//#define LeaderModeEnable 0 // Set to 1 for Leader Mode, 0 for Follower Mode
 
-#if LeaderModeEnable 
+/*#if LeaderModeEnable 
   typedef struct
   {
     int16_t  LeftMotorPWMValue;
@@ -66,7 +66,7 @@
      {MotorLeftForwardPWMValue, MotorRightForwardPWMValue, 2500},
      {0, 0, 2500},
      {MotorLeftReversePWMValue, MotorRightReversePWMValue, 2500}};
-#endif
+#endif*/
 
 // Function to measure LDR Circuit Voltage
 uint16_t MeasureLDRCircuitVoltage(int PinNumber)
@@ -138,7 +138,7 @@ void setup()
   Serial.print("Version: ");
   Serial.println(FirmwareVersion);
   
-  #if LEADER_MODE_ENABLE
+  /*#if LEADER_MODE_ENABLE
     Serial.println("Mode: Leader");
     
     // Start the buggy on the route
@@ -147,7 +147,7 @@ void setup()
                      0);
   #else
     Serial.println("Mode: Follower");
-  #endif
+  #endif*/
 }
 
 // Loop function runs over and over again forever
@@ -188,7 +188,7 @@ void loop()
   
   CurrentTimestamp = millis();
   
-  #if LEADER_MODE_ENABLE
+  /*#if LEADER_MODE_ENABLE
     static uint8_t LegIndex = 0;
     
     const uint8_t TotalRouteLegs = (sizeof(LeaderRouteLegs) / sizeof(LeaderRouteLegs[0]));
@@ -224,7 +224,7 @@ void loop()
     }
   #else
     // Follower code goes here
-  #endif
+  #endif*/
 
 
   if ((CentralLDRDiffMagnitude > LDRDiffThreshold) && 
