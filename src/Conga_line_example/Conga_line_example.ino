@@ -1,7 +1,7 @@
 
 #include <stdint.h>
 
-#define FIRMWARE_VERSION "v1.0.0"
+#define FIRMWARE_VERSION "v0.1"
 
 #define UART_BAUDRATE 115200
 
