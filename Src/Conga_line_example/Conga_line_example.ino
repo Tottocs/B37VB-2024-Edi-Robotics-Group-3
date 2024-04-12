@@ -5,7 +5,7 @@
 
 #define UART_BAUDRATE 115200
 
-#define LOCK_INDICATOR_PIN       4 // Mapped to ATMega328P PD4 (Pin 6) on Arduino Uno
+#define LOCK_INDICATOR_PIN       7 // Mapped to ATMega328P PD4 (Pin 6) on Arduino Uno
 #define MOTOR_L1_PIN             5 // Mapped to ATMega328P PD5 (Pin 11) on Arduino Uno
 #define MOTOR_L2_PIN             6 // Mapped to ATMega328P PD6 (Pin 12) on Arduino Uno
 #define TRANSMIT_ID_CONTROL_PIN  A0 // Mapped to ATMega328P PD7 (Pin 13) on Arduino Uno
