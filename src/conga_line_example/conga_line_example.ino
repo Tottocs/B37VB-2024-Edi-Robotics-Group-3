@@ -11,10 +11,10 @@
 #define TRANSMIT_ID_CONTROL_PIN  A0 // Mapped to ATMega328P PD7 (Pin 13) on Arduino Uno
 #define MOTOR_R1_PIN             9 // Mapped to ATMega328P PB1 (Pin 15) on Arduino Uno
 #define MOTOR_R2_PIN            10 // Mapped to ATMega328P PB2 (Pin 16) on Arduino Uno
-#define BUGGY_ID_PIN_0          16 // Mapped to ATMega328P PC2 (Pin 25) on Arduino Uno
-#define BUGGY_ID_PIN_1          17 // Mapped to ATMega328P PC3 (Pin 26) on Arduino Uno
-#define BUGGY_ID_PIN_2          18 // Mapped to ATMega328P PC4 (Pin 27) on Arduino Uno
-#define BUGGY_ID_PIN_3          19 // Mapped to ATMega328P PC5 (Pin 28) on Arduino Uno
+//#define BUGGY_ID_PIN_0          16 // Mapped to ATMega328P PC2 (Pin 25) on Arduino Uno
+//#define BUGGY_ID_PIN_1          17 // Mapped to ATMega328P PC3 (Pin 26) on Arduino Uno
+//#define BUGGY_ID_PIN_2          18 // Mapped to ATMega328P PC4 (Pin 27) on Arduino Uno
+//#define BUGGY_ID_PIN_3          19 // Mapped to ATMega328P PC5 (Pin 28) on Arduino Uno
 #define LDR_L_PIN               A1 // Mapped to ATMega328P PCO (Pin 23) on Arduino Uno
 #define LDR_R_PIN               A2 // Mapped to ATMega328P PC1 (Pin 24) on Arduino Uno
 
@@ -31,6 +31,7 @@
 
 #define BUGGY_ID_PULSE_PERIOD_MS            2000
 #define BUGGY_ID_PULSE_ON_TIME_STEP_SIZE_MS 50
+#define GROUP                               3
 
 #define BUGGY_ID_PULSE_DETECT_PERIOD_MARGIN_MS    20
 #define BUGGY_ID_PULSE_DETECT_ON_TIME_MARGIN_MS   10
@@ -278,10 +279,10 @@ uint8_t ReadBuggyID()
 {
   uint8_t BuggyID;
   
-  BuggyID = ((digitalRead(BUGGY_ID_PIN_3) << 3) |
+  BuggyID = GROUP/*((digitalRead(BUGGY_ID_PIN_3) << 3) |
              (digitalRead(BUGGY_ID_PIN_2) << 2) |
              (digitalRead(BUGGY_ID_PIN_1) << 1) |
-             (digitalRead(BUGGY_ID_PIN_0) << 0));
+             (digitalRead(BUGGY_ID_PIN_0) << 0))*/;
   
   return BuggyID;
 }
@@ -499,10 +500,10 @@ void setup()
   Serial.begin(UART_BAUDRATE);
   
   // Configure GPIO pins
-  pinMode(BUGGY_ID_PIN_3, INPUT);
-  pinMode(BUGGY_ID_PIN_2, INPUT);
-  pinMode(BUGGY_ID_PIN_1, INPUT);
-  pinMode(BUGGY_ID_PIN_0, INPUT);
+//  pinMode(BUGGY_ID_PIN_3, INPUT);
+//  pinMode(BUGGY_ID_PIN_2, INPUT);
+//  pinMode(BUGGY_ID_PIN_1, INPUT);
+//  pinMode(BUGGY_ID_PIN_0, INPUT);
   pinMode(MOTOR_L1_PIN, OUTPUT);
   pinMode(MOTOR_L2_PIN, OUTPUT);
   pinMode(MOTOR_R1_PIN, OUTPUT);
